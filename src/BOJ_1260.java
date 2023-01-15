@@ -13,7 +13,15 @@ public class BOJ_1260 {
 
     }
 
-    public void BFS(){
+    public void BFS(int v1){
+        Q.add(v1);
+        visited[v1]=true;
+        System.out.print(v1+" ");
+
+        while(!Q.isEmpty()){
+            int tmp=Q.poll();
+
+        }
 
     }
 

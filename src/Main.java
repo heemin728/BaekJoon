@@ -1,88 +1,55 @@
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.StringTokenizer;
 
 public class Main {
+    static int n, W, L;
+    static Queue<Integer> truck;
 
-    static int tt;
-    static int n;
-    static int x1,y1;
-    static int x2,y2;
-
-    static int[] dx = {-1,-2,-2,-1,1,2,2,1};
-    static int[] dy = {-2,-1,1,2,2,1,-1,-2};
-
-    static int[][] visited = new int[301][301];
-
-    public static void main(String[] args) throws Exception {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        tt = Integer.parseInt(st.nextToken());
-
-        while(tt--!=0){
-            st = new StringTokenizer(br.readLine());
-            n = Integer.parseInt(st.nextToken());
-
-            st = new StringTokenizer(br.readLine());
-            x1 = Integer.parseInt(st.nextToken());
-            y1 = Integer.parseInt(st.nextToken());
-
-            st = new StringTokenizer(br.readLine());
-            x2 = Integer.parseInt(st.nextToken());
-            y2 = Integer.parseInt(st.nextToken());
-
-            cleanVisited();
-
-
-            bfs(x1,y1,x2,y2);
-
-            System.out.println(visited[x2][y2]);
+    public static void solution(){
+        int time = 0, w = 0;
+        Queue<Integer> bridge = new LinkedList<>();
+        for(int i = 0; i<W; i++){
+            bridge.add(0);
         }
 
-    }
+        while(!bridge.isEmpty()){
+            time++;
+            w -= bridge.poll();
+            System.out.println("time="+time);
+            System.out.println("weight="+w);
 
-    public static void bfs(int a,int b,int c,int d){
-
-        Queue<Point> q = new LinkedList<>();
-        q.add(new Point(a,b));
-        visited[a][b] = 0;
-
-        while(!q.isEmpty()){
-            Point p = q.poll();
-
-            if(p.x == c && p.y == d) break;
-
-            for(int i=0;i<8;i++){
-                int nx = p.x + dx[i];
-                int ny = p.y + dy[i];
-
-                if(0<=nx && nx<n && 0<=ny & ny<n &&
-                        (visited[nx][ny]==-1 || visited[p.x][p.y]+1 < visited[nx][ny])
-                ){
-                    visited[nx][ny] = visited[p.x][p.y]+1;
-                    q.add(new Point(nx,ny));
+            if(!truck.isEmpty()){ // 트럭이 남아 있는 경우
+                if(truck.peek()+w <= L){ // 최대하중을 넘지 않을 경우
+                    w += truck.peek();
+                    bridge.offer(truck.poll());
+                } else {
+                    bridge.offer(0);
                 }
             }
-
-
         }
 
+        System.out.println(time);
     }
 
-    public static void cleanVisited(){
-        for(int i=0;i<=300;i++)
-            for(int j=0;j<=300;j++)
-                visited[i][j]=-1;
-    }
+    public static void main(String[] args) throws IOException {
+        BufferedReader bf = new BufferedReader(new InputStreamReader(System.in)); //선언
+        StringTokenizer st = new StringTokenizer(bf.readLine());
 
-    static class Point{
-        int x,y;
+        n = Integer.parseInt(st.nextToken()); // 트럭개수
+        W = Integer.parseInt(st.nextToken()); // 다리길이
+        L = Integer.parseInt(st.nextToken()); // 최대하중
 
-        public Point(int x, int y) {
-            this.x = x;
-            this.y = y;
+        truck = new LinkedList<>();
+        st = new StringTokenizer(bf.readLine());
+        for(int i=0; i<n; i++){
+            truck.add(Integer.parseInt(st.nextToken()));
         }
-    }
 
+        solution();
+    }
 }
 
