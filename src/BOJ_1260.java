@@ -1,44 +1,66 @@
 import java.util.*;
+import java.io.*;
 
 public class BOJ_1260 {
 
-    Stack<Integer> S=new Stack<>();
-    Queue<Integer> Q=new LinkedList<>();
-    static int num;
-    boolean[] visited=new boolean[num];
+    public static int[][] map;
+    public static boolean[] visited;
+    static StringBuilder sb=new StringBuilder();
+    static int M,N,V;
 
+    public static void dfs(int index){
+        sb.append(index).append(" ");
+        visited[index]=true;
 
-    public void DFS(int s){
-        visited[s]=false;
-
+        for(int i=1;i<=N;i++){
+            if(!visited[i] && map[index][i]==1){
+                dfs(i);
+            }
+        }
     }
 
-    public void BFS(int v1){
-        Q.add(v1);
-        visited[v1]=true;
-        System.out.print(v1+" ");
+    public static void bfs(){
+        Arrays.fill(visited,false);
+        Queue<Integer> queue=new LinkedList<>();
 
-        while(!Q.isEmpty()){
-            int tmp=Q.poll();
+        queue.add(V);
+        visited[V]=true;
 
+        while(!queue.isEmpty()){
+            int poll=queue.poll();
+            sb.append(poll).append(" ");
+            for(int i=1;i<map.length;i++){
+                if(!visited[i] && map[poll][i]==1){
+                    visited[i]=true;
+                    queue.offer(i);
+                }
+            }
         }
-
     }
+    public static void main(String[] args) throws IOException{
+        BufferedReader buffer=new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st=new StringTokenizer(buffer.readLine()," ");
 
-    public static void main(String[] args) {
-        Scanner scanner=new Scanner(System.in);
 
-        int M=scanner.nextInt();
-        int N=scanner.nextInt();
-        num=N;
-        int V=scanner.nextInt();
+        N=Integer.parseInt(st.nextToken());
+        M=Integer.parseInt(st.nextToken());
+        V=Integer.parseInt(st.nextToken());
 
-        for(int i=0;i<N;i++){
+        map=new int[N+1][N+1];
+        visited=new boolean[N+1];
+        Arrays.fill(visited,false);
 
-            int V1=scanner.nextInt();
-            int V2=scanner.nextInt();
-
+        for(int i=0;i<M;i++){
+            st=new StringTokenizer(buffer.readLine()," ");
+            int a=Integer.parseInt(st.nextToken());
+            int b=Integer.parseInt(st.nextToken());
+            map[a][b]=1;
+            map[b][a]=1;
         }
+        dfs(V);
+        sb.append("\n");
+        bfs();
 
+        System.out.println(sb);
     }
 }
